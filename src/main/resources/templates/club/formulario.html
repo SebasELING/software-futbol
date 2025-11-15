@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${club.id != null} ? 'Editar Club' : 'Nuevo Club'"></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-light: #dbeafe;
+            --success-color: #10b981;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        body {
+            background-color: #f8fafc;
+            color: var(--text-dark);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+        }
+        
+        .navbar {
+            box-shadow: var(--shadow);
+            padding: 0.75rem 0;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--primary-color) !important;
+            font-size: 1.5rem;
+        }
+        
+        .nav-link {
+            font-weight: 500;
+            padding: 0.5rem 1rem !important;
+            border-radius: 0.375rem;
+            transition: all 0.2s ease;
+            margin: 0 0.125rem;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background-color: var(--primary-light);
+            color: var(--primary-color) !important;
+        }
+        
+        .container {
+            max-width: 800px;
+        }
+        
+        .page-header {
+            margin-bottom: 2rem;
+        }
+        
+        .page-title {
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 0.25rem;
+            font-size: 1.75rem;
+        }
+        
+        .page-subtitle {
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+        
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+            margin-bottom: 1.5rem;
+        }
+        
+        .back-link:hover {
+            color: var(--primary-color);
+        }
+        
+        .card {
+            border: none;
+            border-radius: 0.75rem;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .card-header {
+            background-color: white;
+            border-bottom: 1px solid var(--border-color);
+            padding: 1.25rem 1.5rem;
+        }
+        
+        .card-body {
+            padding: 2rem;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-control, .form-select {
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            transition: all 0.2s ease;
+            font-size: 0.95rem;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        .form-text {
+            color: var(--text-light);
+            font-size: 0.875rem;
+            margin-top: 0.375rem;
+        }
+        
+        .required-field::after {
+            content: " *";
+            color: #ef4444;
+        }
+        
+        .btn {
+            border-radius: 0.5rem;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-primary:hover {
+            background-color: #1d4ed8;
+            border-color: #1d4ed8;
+            transform: translateY(-1px);
+            box-shadow: var(--shadow);
+        }
+        
+        .btn-success {
+            background-color: var(--success-color);
+            border-color: var(--success-color);
+        }
+        
+        .btn-success:hover {
+            background-color: #059669;
+            border-color: #059669;
+            transform: translateY(-1px);
+            box-shadow: var(--shadow);
+        }
+        
+        .btn-outline-secondary {
+            color: var(--text-light);
+            border-color: var(--border-color);
+        }
+        
+        .btn-outline-secondary:hover {
+            background-color: #f1f5f9;
+            border-color: var(--text-light);
+            color: var(--text-dark);
+        }
+        
+        .form-section {
+            margin-bottom: 2rem;
+        }
+        
+        .section-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .input-group-icon {
+            position: relative;
+        }
+        
+        .input-group-icon .form-control {
+            padding-left: 2.5rem;
+        }
+        
+        .input-group-icon .bi {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            z-index: 5;
+        }
+        
+        @media (max-width: 768px) {
+            .card-body {
+                padding: 1.5rem;
+            }
+            
+            .btn {
+                width: 100%;
+                margin-bottom: 0.5rem;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-white">
+        <div class="container">
+            <a class="navbar-brand" th:href="@{/}">Futbol App</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="navbar-nav ms-auto">
+                    <a class="nav-link active" th:href="@{/clubes}">Clubes</a>
+                    <a class="nav-link" th:href="@{/jugadores}">Jugadores</a>
+                    <a class="nav-link" th:href="@{/entrenadores}">Entrenadores</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-5">
+        <a th:href="@{/clubes}" class="back-link">
+            <i class="bi bi-arrow-left me-2"></i>
+            Volver a Clubes
+        </a>
+
+        <div class="page-header">
+            <h1 class="page-title" th:text="${club.id != null} ? 'Editar Club' : 'Nuevo Club'"></h1>
+            <p class="page-subtitle" th:text="${club.id != null} ? 
+                'Actualice la información del club seleccionado' : 
+                'Complete el formulario para registrar un nuevo club'"></p>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2 class="section-title mb-0">
+                    <i class="bi bi-building me-2"></i>
+                    <span th:text="${club.id != null} ? 'Información del Club' : 'Datos del Nuevo Club'"></span>
+                </h2>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/clubes/guardar}" th:object="${club}" method="post">
+                    <input type="hidden" th:field="*{id}">
+                    
+                    <div class="form-section">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-4">
+                                    <label class="form-label required-field">Nombre del Club</label>
+                                    <div class="input-group-icon">
+                                        <i class="bi bi-building"></i>
+                                        <input type="text" class="form-control" th:field="*{nombre}" 
+                                               placeholder="Ingrese el nombre del club" required>
+                                    </div>
+                                    <div class="form-text">Nombre oficial del club de fútbol</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-4">
+                                    <label class="form-label">Ciudad</label>
+                                    <div class="input-group-icon">
+                                        <i class="bi bi-geo-alt"></i>
+                                        <input type="text" class="form-control" th:field="*{ciudad}" 
+                                               placeholder="Ciudad sede del club">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-4">
+                                    <label class="form-label">Año de Fundación</label>
+                                    <div class="input-group-icon">
+                                        <i class="bi bi-calendar-event"></i>
+                                        <input type="number" class="form-control" th:field="*{fundacion}" 
+                                               min="1800" max="2024" placeholder="Ej: 1946">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-4">
+                                    <label class="form-label">Entrenador</label>
+                                    <select class="form-select" th:field="*{entrenador}">
+                                        <option value="">Seleccionar Entrenador</option>
+                                        <option th:each="entrenador : ${entrenadores}" 
+                                                th:value="${entrenador.id}"
+                                                th:text="${entrenador.nombre + ' ' + entrenador.apellido + ' (' + entrenador.nacionalidad + ')'}"
+                                                th:selected="${club.entrenador != null && club.entrenador.id == entrenador.id}">
+                                        </option>
+                                    </select>
+                                    <div class="form-text">Seleccione el entrenador del club</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label">Asociación</label>
+                            <select class="form-select" th:field="*{asociacion}">
+                                <option value="">Seleccionar Asociación</option>
+                                <option th:each="asociacion : ${asociaciones}" 
+                                        th:value="${asociacion.id}"
+                                        th:text="${asociacion.nombre + ' - ' + asociacion.pais}"
+                                        th:selected="${club.asociacion != null && club.asociacion.id == asociacion.id}">
+                                </option>
+                            </select>
+                            <div class="form-text">Asociación a la que pertenece el club</div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex flex-column flex-md-row justify-content-end gap-3 mt-4 pt-3 border-top">
+                        <a th:href="@{/clubes}" class="btn btn-outline-secondary">
+                            <i class="bi bi-x-circle me-1"></i> Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi" th:classappend="${club.id != null} ? 'bi-check-circle' : 'bi-plus-circle'" th:class="me-1"></i>
+                            <span th:text="${club.id != null} ? 'Actualizar Club' : 'Crear Club'"></span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

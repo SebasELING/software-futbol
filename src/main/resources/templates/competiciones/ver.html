@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${competicion.nombre}"></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-light: #dbeafe;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        body {
+            background-color: #f8fafc;
+            color: var(--text-dark);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1000px;
+        }
+        
+        .page-header {
+            margin-bottom: 2rem;
+        }
+        
+        .page-title {
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 0.25rem;
+            font-size: 1.75rem;
+        }
+        
+        .page-subtitle {
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+        
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+            margin-bottom: 1.5rem;
+        }
+        
+        .back-link:hover {
+            color: var(--primary-color);
+        }
+        
+        .card {
+            border: none;
+            border-radius: 0.75rem;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            transition: transform 0.2s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .card-header {
+            background-color: white;
+            border-bottom: 1px solid var(--border-color);
+            padding: 1.25rem 1.5rem;
+        }
+        
+        .card-body {
+            padding: 1.5rem;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .info-item {
+            padding: 0.75rem 0;
+        }
+        
+        .info-label {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.25rem;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .info-value {
+            font-size: 1.125rem;
+            color: var(--text-dark);
+            margin-bottom: 0;
+        }
+        
+        .info-value-empty {
+            color: var(--text-light);
+            font-style: italic;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+            border-top: 4px solid var(--primary-color);
+        }
+        
+        .stat-number {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.25rem;
+        }
+        
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .badge {
+            font-weight: 500;
+            padding: 0.35rem 0.65rem;
+            border-radius: 0.375rem;
+            font-size: 0.75rem;
+        }
+        
+        .badge-premium {
+            background-color: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+        
+        .badge-count {
+            background-color: var(--primary-light);
+            color: var(--primary-color);
+        }
+        
+        .btn {
+            border-radius: 0.5rem;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-warning {
+            background-color: var(--warning-color);
+            border-color: var(--warning-color);
+            color: white;
+        }
+        
+        .btn-warning:hover {
+            background-color: #d97706;
+            border-color: #d97706;
+            transform: translateY(-1px);
+            box-shadow: var(--shadow);
+        }
+        
+        .btn-outline-secondary {
+            color: var(--text-light);
+            border-color: var(--border-color);
+        }
+        
+        .btn-outline-secondary:hover {
+            background-color: #f1f5f9;
+            border-color: var(--text-light);
+            color: var(--text-dark);
+        }
+        
+        .prize-card {
+            background: linear-gradient(135deg, #dcfce7, #ffffff);
+            border-left: 4px solid var(--success-color);
+        }
+        
+        .date-card {
+            background: linear-gradient(135deg, #dbeafe, #ffffff);
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .empty-state {
+            padding: 2rem;
+            text-align: center;
+            color: var(--text-light);
+        }
+        
+        .empty-state-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #cbd5e1;
+        }
+        
+        .club-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            background-color: #f8fafc;
+            margin-bottom: 0.5rem;
+            transition: background-color 0.2s ease;
+        }
+        
+        .club-item:hover {
+            background-color: #f1f5f9;
+        }
+        
+        .club-icon {
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            color: var(--primary-color);
+        }
+        
+        .club-name {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+        
+        .club-details {
+            font-size: 0.875rem;
+            color: var(--text-light);
+        }
+        
+        @media (max-width: 768px) {
+            .card-body {
+                padding: 1.25rem;
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .btn-group {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .btn {
+                width: 100%;
+                margin-bottom: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container my-5">
+        <a th:href="@{/competiciones}" class="back-link">
+            <i class="bi bi-arrow-left me-2"></i>
+            Volver a Competiciones
+        </a>
+
+        <div class="page-header">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
+                <div class="mb-3 mb-md-0">
+                    <h1 class="page-title" th:text="${competicion.nombre}"></h1>
+                    <p class="page-subtitle">Detalles completos de la competición de fútbol</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <a th:href="@{/competiciones/editar/{id}(id=${competicion.id})}" class="btn btn-warning">
+                        <i class="bi bi-pencil me-1"></i> Editar Competición
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" th:text="${competicion.id}"></div>
+                <div class="stat-label">ID Competición</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" th:text="${competicion.clubes.size()}"></div>
+                <div class="stat-label">Clubes Participantes</div>
+            </div>
+            <div class="stat-card prize-card">
+                <div class="stat-number" th:if="${competicion.montoPremio > 0}" 
+                     th:text="'$' + ${#numbers.formatInteger(competicion.montoPremio, 0, 'DEFAULT')}"></div>
+                <div class="stat-number" th:unless="${competicion.montoPremio > 0}">-</div>
+                <div class="stat-label">Premio Total</div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Información Principal -->
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="bi bi-info-circle me-2"></i>
+                            Información General
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <div class="info-label">Nombre de la Competición</div>
+                                <div class="info-value" th:text="${competicion.nombre}"></div>
+                            </div>
+                            
+                            <div class="info-item">
+                                <div class="info-label">Monto del Premio</div>
+                                <div th:if="${competicion.montoPremio > 0}" class="info-value">
+                                    <span class="badge badge-premium" 
+                                          th:text="'$' + ${#numbers.formatInteger(competicion.montoPremio, 0, 'DEFAULT')}"></span>
+                                </div>
+                                <div th:unless="${competicion.montoPremio > 0}" class="info-value info-value-empty">
+                                    Sin premio establecido
+                                </div>
+                            </div>
+                            
+                            <div class="info-item">
+                                <div class="info-label">Fecha de Inicio</div>
+                                <div th:if="${competicion.fechaInicio}" class="info-value" th:text="${competicion.fechaInicio}"></div>
+                                <div th:unless="${competicion.fechaInicio}" class="info-value info-value-empty">
+                                    No especificada
+                                </div>
+                            </div>
+                            
+                            <div class="info-item">
+                                <div class="info-label">Fecha de Fin</div>
+                                <div th:if="${competicion.fechaFin}" class="info-value" th:text="${competicion.fechaFin}"></div>
+                                <div th:unless="${competicion.fechaFin}" class="info-value info-value-empty">
+                                    No especificada
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Clubes Participantes -->
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="bi bi-people me-2"></i>
+                            Clubes Participantes
+                        </h5>
+                        <span class="badge badge-count" th:text="${competicion.clubes.size() + ' clubes'}"></span>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${!competicion.clubes.empty}">
+                            <div th:each="club : ${competicion.clubes}" class="club-item">
+                                <div class="club-icon">
+                                    <i class="bi bi-trophy"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <div class="club-name" th:text="${club.nombre}"></div>
+                                    <div class="club-details" th:text="${club.ciudad + ' • ' + club.fundacion}"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div th:if="${competicion.clubes.empty}" class="empty-state">
+                            <div class="empty-state-icon">
+                                <i class="bi bi-people"></i>
+                            </div>
+                            <h5>No hay clubes participantes</h5>
+                            <p class="mb-0">Esta competición no tiene clubes registrados actualmente.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Información Adicional -->
+            <div class="col-lg-4">
+                <!-- Período de la Competición -->
+                <div class="card date-card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="bi bi-calendar-range me-2"></i>
+                            Período
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${competicion.fechaInicio && competicion.fechaFin}" class="text-center">
+                            <div class="mb-2">
+                                <i class="bi bi-calendar-event display-6 text-primary"></i>
+                            </div>
+                            <h6 class="mb-1" th:text="${competicion.fechaInicio}"></h6>
+                            <div class="text-muted small mb-3">Fecha de Inicio</div>
+                            <i class="bi bi-arrow-down text-muted mb-3 d-block"></i>
+                            <h6 class="mb-1" th:text="${competicion.fechaFin}"></h6>
+                            <div class="text-muted small">Fecha de Fin</div>
+                        </div>
+                        <div th:unless="${competicion.fechaInicio && competicion.fechaFin}" class="text-center py-3">
+                            <i class="bi bi-calendar-x display-6 text-muted mb-2"></i>
+                            <p class="text-muted mb-0">Período no especificado</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Acciones Rápidas -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="bi bi-lightning me-2"></i>
+                            Acciones
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <a th:href="@{/competiciones/editar/{id}(id=${competicion.id})}" class="btn btn-warning">
+                                <i class="bi bi-pencil me-1"></i> Editar Competición
+                            </a>
+                            <a th:href="@{/competiciones}" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left me-1"></i> Volver al Listado
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
